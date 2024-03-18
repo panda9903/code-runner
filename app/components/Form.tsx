@@ -58,14 +58,14 @@ export function ProfileForm() {
         className="space-y-8 px-64 py-40 flex flex-col"
       >
         <div className="flex justify-center items-center">
-          <p className=" text-amber-500 text-6xl">Code Runner</p>
+          <p className=" text-amber-500 text-6xl font-mono">Code Runner</p>
         </div>
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className=" text-white">Username</FormLabel>
+              <FormLabel className=" ">Username</FormLabel>
               <FormControl>
                 <Input placeholder="John Doe" {...field} />
               </FormControl>
@@ -73,7 +73,7 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <FormDescription className=" text-white">
+        <FormDescription className="text-black">
           Choose your preferred language{" "}
         </FormDescription>
         {/*         <Languages setLanguage={setSelectedLanguage}/>
@@ -83,7 +83,7 @@ export function ProfileForm() {
           control={form.control}
           name="type"
           render={({ field }) => (
-            <FormItem className="space-y-3 text-white">
+            <FormItem className="space-y-3 ">
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -126,7 +126,7 @@ export function ProfileForm() {
           name="io"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Input</FormLabel>
+              <FormLabel className="">Input</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Paste your input here"
@@ -143,7 +143,7 @@ export function ProfileForm() {
           name="code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-white">Code</FormLabel>
+              <FormLabel className="">Code</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Paste your code here"

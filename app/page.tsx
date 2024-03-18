@@ -1,8 +1,8 @@
-import {ProfileForm} from './components/Form';
+import { ProfileForm } from "./components/Form";
 
 export default function Home() {
   return (
-    <main className='bg-black'>
+    <main className="">
       <ProfileForm />
     </main>
   );
