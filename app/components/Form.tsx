@@ -20,14 +20,18 @@ import { Textarea } from "@/components/ui/textarea";
 
 /* import { Languages } from "./LangaugeComboBox"
  */ import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  type: z.enum(["cpp", "python", "java", "javascript"], {}),
-  io: z.string().min(2, {}),
-  code: z.string().min(2, {}),
+  code_language: z.enum(["cpp", "python", "java", "javascript"], {}),
+  stdin: z.string(),
+  code: z.string().min(1, {
+    message: "Please paste your code.",
+  }),
 });
 
 export function ProfileForm() {
@@ -36,127 +40,140 @@ export function ProfileForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      type: "cpp",
-      io: "",
+      code_language: "cpp",
+      stdin: "",
       code: "",
     },
   });
+
+  const router = useRouter();
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    const res = fetch("http://localhost:3000/submissions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    console.log(res);
+    router.push("/submissions");
   }
 
-  const [selectedLanuage, setSelectedLanguage] = useState("C++");
-
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 px-64 py-40 flex flex-col"
-      >
-        <div className="flex justify-center items-center">
-          <p className=" text-amber-500 text-6xl font-mono">Code Runner</p>
-        </div>
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className=" ">Username</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormDescription className="text-black">
-          Choose your preferred language{" "}
-        </FormDescription>
-        {/*         <Languages setLanguage={setSelectedLanguage}/>
-         */}
+    <div className="flex justify-center items-center flex-col md:px-48 px-10 py-40 ">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 flex flex-col"
+        >
+          <div className="flex justify-center items-center flex-col">
+            <p className=" text-amber-500 text-6xl font-mono">Code Runner</p>
+          </div>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className=" ">Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="John Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormDescription className="text-black">
+            Choose your preferred language{" "}
+          </FormDescription>
+          {/*         <Languages setLanguage={setSelectedLanguage}/>
+           */}
+          <FormField
+            control={form.control}
+            name="code_language"
+            render={({ field }) => (
+              <FormItem className="space-y-3 ">
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="cpp" />
+                      </FormControl>
+                      <FormLabel className="font-normal">C++</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="python" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Python</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="java" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Java</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="javascript" />
+                      </FormControl>
+                      <FormLabel className="font-normal">JavaScript</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="stdin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="">Input</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Paste your input here"
+                    className="resize-none"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="code"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="">Code</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Paste your code here"
+                    className="resize-none h-[30rem]"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="">
+            Submit
+          </Button>{" "}
+        </form>
+      </Form>
 
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem className="space-y-3 ">
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="cpp" />
-                    </FormControl>
-                    <FormLabel className="font-normal">C++</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="python" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Python</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="java" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Java</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="javascript" />
-                    </FormControl>
-                    <FormLabel className="font-normal">JavaScript</FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="io"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="">Input</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Paste your input here"
-                  className="resize-none"
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="">Code</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Paste your code here"
-                  className="resize-none h-[30rem]"
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+      <Link href="/submissions">
+        <Button className="mt-6">See submissions</Button>
+      </Link>
+    </div>
   );
 }
