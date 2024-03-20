@@ -18,13 +18,35 @@ type Submission = {
   stdin: string;
   code: string;
   submitted_at: string;
+  output: string;
+  status: string;
 };
+
+function formatTimestamp(timestamp: string): string {
+  const dateObj = new Date(timestamp);
+
+  // Options for formatting the date and time
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  };
+
+  // Convert to local time zone before formatting
+  dateObj.toLocaleString("en-US", options); // This doesn't modify the dateObj, but sets time zone
+
+  return dateObj.toLocaleString("en-US", options);
+}
 
 export function TableDemo() {
   const [invoices, setInvoices] = useState<Submission[]>([]);
 
   useEffect(() => {
-    console.log("useEffect");
+    //console.log("useEffect");
     const getData = async () => {
       const tempInvoices: Submission[] = [];
 
@@ -44,9 +66,11 @@ export function TableDemo() {
           code_language: submission.code_language,
           stdin: submission.stdin,
           code: code,
-          submitted_at: submission.submitted_at,
+          submitted_at: formatTimestamp(submission.submitted_at),
+          output: submission.output,
+          status: submission.status,
         });
-        console.log(submission);
+        //console.log(submission);
       });
       console.log("Invoices", tempInvoices);
       setInvoices(tempInvoices);
@@ -60,21 +84,29 @@ export function TableDemo() {
       <TableCaption>A list of your recent submissions.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">ID</TableHead>
+          <TableHead className="">Username</TableHead>
           <TableHead>Code Language</TableHead>
           <TableHead>Code</TableHead>
           <TableHead>stdin</TableHead>
-          <TableHead className="text-right">Submitted At</TableHead>
+          <TableHead>stdout</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead className="">Submitted At</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.username}</TableCell>
+            <TableCell className="">{invoice.username}</TableCell>
             <TableCell>{invoice.code_language}</TableCell>
             <TableCell>{invoice.code}</TableCell>
-            <TableCell className="text-right">{invoice.stdin}</TableCell>
-            <TableCell className="text-right">{invoice.submitted_at}</TableCell>
+            <TableCell className="">
+              {invoice.stdin === "" ? "NULL" : invoice.stdin}
+            </TableCell>
+            <TableCell className="">
+              {invoice.output === "" ? "NULL" : invoice.output}
+            </TableCell>
+            <TableCell className="">{invoice.status}</TableCell>
+            <TableCell className="">{invoice.submitted_at}</TableCell>
           </TableRow>
         ))}
       </TableBody>

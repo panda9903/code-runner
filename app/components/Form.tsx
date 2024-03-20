@@ -29,6 +29,7 @@ const formSchema = z.object({
   }),
   code_language: z.enum(["cpp", "python", "java", "javascript"], {}),
   stdin: z.string(),
+  stdout: z.string(),
   code: z.string().min(1, {
     message: "Please paste your code.",
   }),
@@ -42,6 +43,7 @@ export function ProfileForm() {
       username: "",
       code_language: "cpp",
       stdin: "",
+      stdout: "",
       code: "",
     },
   });
@@ -141,7 +143,23 @@ export function ProfileForm() {
                 <FormLabel className="">Input</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Paste your input here"
+                    placeholder="Paste your input here. Leave empty if not applicable."
+                    className="resize-none"
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="stdout"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="">Expected Output</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Paste your input here. Leave empty if not applicable."
                     className="resize-none"
                     {...field}
                   />
