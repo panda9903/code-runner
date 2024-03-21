@@ -17,9 +17,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-
-/* import { Languages } from "./LangaugeComboBox"
- */ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -36,7 +33,6 @@ const formSchema = z.object({
 });
 
 export function ProfileForm() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,12 +46,9 @@ export function ProfileForm() {
 
   const router = useRouter();
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
-    const res = fetch("http://localhost:3000/submissions", {
+    const res = fetch("https://code-runner-w97q.onrender.com/submissions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,8 +85,6 @@ export function ProfileForm() {
           <FormDescription className="text-black">
             Choose your preferred language{" "}
           </FormDescription>
-          {/*         <Languages setLanguage={setSelectedLanguage}/>
-           */}
           <FormField
             control={form.control}
             name="code_language"

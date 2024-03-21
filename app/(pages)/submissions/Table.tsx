@@ -50,7 +50,9 @@ export function TableDemo() {
     const getData = async () => {
       const tempInvoices: Submission[] = [];
 
-      const res = await fetch("http://localhost:3000/submissions");
+      const res = await fetch(
+        "https://code-runner-w97q.onrender.com/submissions"
+      );
       const data = await res.json();
       console.log(data);
 
