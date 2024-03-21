@@ -182,7 +182,7 @@ export function ProfileForm() {
           {submitted ? (
             <Button disabled>
               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-              Please wait
+              Compiling your code
             </Button>
           ) : (
             <Button type="submit" className="">
