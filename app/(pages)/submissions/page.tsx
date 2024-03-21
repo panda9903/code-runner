@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function Submissions() {
   return (
     <main className=" md:px-36 px-10  py-40 flex flex-col items-center justify-center">
-      <p className="text-6xl text-amber-500 font-mono">Submissions</p>
+      <p className="text-6xl text-[#e11203] font-mono">Submissions</p>
       <TableDemo />
 
       <Link href="/">

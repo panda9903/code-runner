@@ -74,7 +74,7 @@ export function ProfileForm() {
           className="space-y-8 flex flex-col"
         >
           <div className="flex justify-center items-center flex-col">
-            <p className=" text-amber-500 text-6xl font-mono">Code Runner</p>
+            <p className=" text-[#e11203] text-6xl font-mono">Code Runner</p>
           </div>
           <FormField
             control={form.control}
