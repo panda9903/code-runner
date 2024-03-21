@@ -61,7 +61,7 @@ export function ProfileForm() {
     setSubmitted(true);
     setTimeout(() => {
       router.push("/submissions");
-    }, 2000);
+    }, 3000);
   }
 
   return (
