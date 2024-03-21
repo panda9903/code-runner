@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,6 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -45,6 +46,7 @@ export function ProfileForm() {
   });
 
   const router = useRouter();
+  const [submitted, setSubmitted] = useState(false);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -56,7 +58,10 @@ export function ProfileForm() {
       body: JSON.stringify(values),
     });
     console.log(res);
-    router.push("/submissions");
+    setSubmitted(true);
+    setTimeout(() => {
+      router.push("/submissions");
+    }, 2000);
   }
 
   return (
@@ -142,7 +147,7 @@ export function ProfileForm() {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="stdout"
             render={({ field }) => (
@@ -157,7 +162,7 @@ export function ProfileForm() {
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="code"
@@ -174,9 +179,16 @@ export function ProfileForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="">
-            Submit
-          </Button>{" "}
+          {submitted ? (
+            <Button disabled>
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              Please wait
+            </Button>
+          ) : (
+            <Button type="submit" className="">
+              Submit
+            </Button>
+          )}
         </form>
       </Form>
 
