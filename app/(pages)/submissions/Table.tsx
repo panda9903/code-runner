@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
+import Loader from "@/app/loader";
 
 type Submission = {
   id: number;
@@ -44,6 +45,7 @@ function formatTimestamp(timestamp: string): string {
 
 export function TableDemo() {
   const [invoices, setInvoices] = useState<Submission[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     //console.log("useEffect");
@@ -78,46 +80,56 @@ export function TableDemo() {
       setInvoices(tempInvoices);
     };
 
+    setLoading(true);
     getData();
+    setLoading(false);
   }, []);
 
   return (
-    <Table>
-      <TableCaption>A list of your recent submissions.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="">Username</TableHead>
-          <TableHead>Code Language</TableHead>
-          <TableHead>Code</TableHead>
-          <TableHead>stdin</TableHead>
-          <TableHead>stdout</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead className="">Submitted At</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="">{invoice.username}</TableCell>
-            <TableCell>{invoice.code_language}</TableCell>
-            <TableCell>{invoice.code}</TableCell>
-            <TableCell className="">
-              {invoice.stdin === "" ? "NULL" : invoice.stdin}
-            </TableCell>
-            <TableCell className="">
-              {invoice.output === "" ? "NULL" : invoice.output}
-            </TableCell>
-            <TableCell className="">{invoice.status}</TableCell>
-            <TableCell className="">{invoice.submitted_at}</TableCell>
+    <div>
+      {loading && (
+        <div className="overlay fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <Loader />
+        </div>
+      )}
+
+      <Table>
+        <TableCaption>A list of your recent submissions.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="">Username</TableHead>
+            <TableHead>Code Language</TableHead>
+            <TableHead>Code</TableHead>
+            <TableHead>stdin</TableHead>
+            <TableHead>stdout</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead className="">Submitted At</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-      {/* <TableFooter>
+        </TableHeader>
+        <TableBody>
+          {invoices.map((invoice) => (
+            <TableRow key={invoice.id}>
+              <TableCell className="">{invoice.username}</TableCell>
+              <TableCell>{invoice.code_language}</TableCell>
+              <TableCell>{invoice.code}</TableCell>
+              <TableCell className="">
+                {invoice.stdin === "" ? "NULL" : invoice.stdin}
+              </TableCell>
+              <TableCell className="">
+                {invoice.output === "" ? "NULL" : invoice.output}
+              </TableCell>
+              <TableCell className="">{invoice.status}</TableCell>
+              <TableCell className="">{invoice.submitted_at}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        {/* <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
           <TableCell className="text-right">$2,500.00</TableCell>
         </TableRow>
       </TableFooter> */}
-    </Table>
+      </Table>
+    </div>
   );
 }

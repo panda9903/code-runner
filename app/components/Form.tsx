@@ -20,6 +20,8 @@ import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Editor from "@monaco-editor/react";
+import Loader from "../loader";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -47,6 +49,7 @@ export function ProfileForm() {
 
   const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
+  const [codeLanguage, setCodeLanguage] = useState("cpp");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -97,7 +100,11 @@ export function ProfileForm() {
               <FormItem className="space-y-3 ">
                 <FormControl>
                   <RadioGroup
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      setCodeLanguage(value);
+                      console.log(value);
+                    }}
                     defaultValue={field.value}
                     className="flex flex-col space-y-1"
                   >
@@ -169,11 +176,12 @@ export function ProfileForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="">Code</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Paste your code here"
-                    className="resize-none h-[30rem]"
-                    {...field}
+                <FormControl onChange={field.onChange}>
+                  <Editor
+                    height="90vh"
+                    key={codeLanguage}
+                    language={codeLanguage}
+                    defaultValue="Please write your code here."
                   />
                 </FormControl>
               </FormItem>
@@ -182,6 +190,9 @@ export function ProfileForm() {
           {submitted ? (
             <Button disabled>
               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              <div className="overlay fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
+                <Loader />
+              </div>
               Compiling your code
             </Button>
           ) : (
