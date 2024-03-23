@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import Loader from "@/app/loader";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Submission = {
   id: number;
@@ -110,7 +112,9 @@ export function TableDemo() {
           {invoices.map((invoice) => (
             <TableRow key={invoice.id}>
               <TableCell className="">{invoice.username}</TableCell>
-              <TableCell>{invoice.code_language}</TableCell>
+              <TableCell className=" capitalize">
+                {invoice.code_language}
+              </TableCell>
               <TableCell>{invoice.code}</TableCell>
               <TableCell className="">
                 {invoice.stdin === "" ? "NULL" : invoice.stdin}
@@ -120,6 +124,13 @@ export function TableDemo() {
               </TableCell>
               <TableCell className="">{invoice.status}</TableCell>
               <TableCell className="">{invoice.submitted_at}</TableCell>
+              <TableCell className="text-right">
+                <Button>
+                  <Link href={`/submissions/${invoice.id}`} target="_blank">
+                    View Code
+                  </Link>
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
