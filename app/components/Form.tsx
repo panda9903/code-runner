@@ -178,7 +178,7 @@ export function ProfileForm() {
                 <FormLabel className="">Code</FormLabel>
                 <FormControl onChange={field.onChange}>
                   <Editor
-                    height="90vh"
+                    height="70vh"
                     key={codeLanguage}
                     language={codeLanguage}
                     defaultValue="Please write your code here."

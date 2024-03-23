@@ -20,6 +20,7 @@ type Submission = {
   code_language: string;
   stdin: string;
   code: string;
+  short_code: string;
   submitted_at: string;
   output: string;
   status: string;
@@ -46,13 +47,13 @@ function formatTimestamp(timestamp: string): string {
 }
 
 export function TableDemo() {
-  const [invoices, setInvoices] = useState<Submission[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     //console.log("useEffect");
     const getData = async () => {
-      const tempInvoices: Submission[] = [];
+      const tempSubmissions: Submission[] = [];
 
       const res = await fetch(
         "https://code-runner-w97q.onrender.com/submissions"
@@ -62,24 +63,25 @@ export function TableDemo() {
 
       data.forEach((submission: Submission) => {
         var code = submission.code;
+        var short_code = code;
         if (code.length > 100) {
-          code = code.substring(0, 100) + "...";
+          short_code = code.substring(0, 100) + "...";
         }
 
-        tempInvoices.push({
+        tempSubmissions.push({
           id: submission.id,
           username: submission.username,
           code_language: submission.code_language,
           stdin: submission.stdin,
           code: code,
+          short_code: short_code,
           submitted_at: formatTimestamp(submission.submitted_at),
           output: submission.output,
           status: submission.status,
         });
-        //console.log(submission);
       });
-      console.log("Invoices", tempInvoices);
-      setInvoices(tempInvoices);
+      console.log("Submissions", tempSubmissions);
+      setSubmissions(tempSubmissions);
     };
 
     setLoading(true);
@@ -109,26 +111,24 @@ export function TableDemo() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.id}>
-              <TableCell className="">{invoice.username}</TableCell>
+          {submissions.map((submission) => (
+            <TableRow key={submission.id}>
+              <TableCell className="">{submission.username}</TableCell>
               <TableCell className=" capitalize">
-                {invoice.code_language}
+                {submission.code_language}
               </TableCell>
-              <TableCell>{invoice.code}</TableCell>
+              <TableCell>{submission.short_code}</TableCell>
               <TableCell className="">
-                {invoice.stdin === "" ? "NULL" : invoice.stdin}
+                {submission.stdin === "" ? "NULL" : submission.stdin}
               </TableCell>
               <TableCell className="">
-                {invoice.output === "" ? "NULL" : invoice.output}
+                {submission.output === "" ? "NULL" : submission.output}
               </TableCell>
-              <TableCell className="">{invoice.status}</TableCell>
-              <TableCell className="">{invoice.submitted_at}</TableCell>
+              <TableCell className="">{submission.status}</TableCell>
+              <TableCell className="">{submission.submitted_at}</TableCell>
               <TableCell className="text-right">
                 <Button>
-                  <Link href={`/submissions/${invoice.id}`} target="_blank">
-                    View Code
-                  </Link>
+                  <Link href={`/submissions/${submission.id}`}>View Code</Link>
                 </Button>
               </TableCell>
             </TableRow>

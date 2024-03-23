@@ -44,12 +44,12 @@ const CodePage = ({
     id: string;
   };
 }) => {
-  const [invoices, setInvoices] = useState<Submission[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
-      const tempInvoices: Submission[] = [];
+      const tempSubmissions: Submission[] = [];
 
       const res = await fetch(
         "https://code-runner-w97q.onrender.com/submissions"
@@ -58,25 +58,19 @@ const CodePage = ({
       console.log(data);
 
       data.forEach((submission: Submission) => {
-        var code = submission.code;
-        if (code.length > 100) {
-          code = code.substring(0, 100) + "...";
-        }
-
-        tempInvoices.push({
+        tempSubmissions.push({
           id: submission.id,
           username: submission.username,
           code_language: submission.code_language,
           stdin: submission.stdin,
-          code: code,
+          code: submission.code,
           submitted_at: formatTimestamp(submission.submitted_at),
           output: submission.output,
           status: submission.status,
         });
-        //console.log(submission);
       });
-      console.log("Invoices", tempInvoices);
-      setInvoices(tempInvoices);
+      console.log("Submissions", tempSubmissions);
+      setSubmissions(tempSubmissions);
     };
 
     setLoading(true);
@@ -92,27 +86,30 @@ const CodePage = ({
         </div>
       )}
 
-      {invoices
-        .filter((invoice: Submission) => invoice.id === parseInt(params.id))
-        .map((invoice: Submission) => (
-          <div key={invoice.id} className="flex flex-col">
+      {submissions
+        .filter(
+          (submission: Submission) => submission.id === parseInt(params.id)
+        )
+        .map((submission: Submission) => (
+          <div key={submission.id} className="flex flex-col">
             <div className="flex w-[95vw] justify-between">
               <div>
                 <p>
                   Code submitted by{" "}
-                  <span className=" text-2xl">{invoice.username}</span>
+                  <span className=" text-2xl">{submission.username}</span>
                 </p>
                 <p>
                   Code Language:{" "}
                   <span className=" capitalize font-semibold">
-                    {invoice.code_language}
+                    {submission.code_language}
                   </span>
                 </p>
               </div>
 
               <div>
                 <p>
-                  Submitted at: <span className="">{invoice.submitted_at}</span>
+                  Submitted at:{" "}
+                  <span className="">{submission.submitted_at}</span>
                 </p>
               </div>
             </div>
@@ -120,22 +117,26 @@ const CodePage = ({
             <div className="flex w-[95vw] justify-between mt-8">
               <p>
                 Input is{" "}
-                <span>{invoice.stdin === "" ? "NULL" : invoice.stdin}</span>
+                <span>
+                  {submission.stdin === "" ? "NULL" : submission.stdin}
+                </span>
                 <p>
                   Output is{" "}
-                  <span>{invoice.output === "" ? "NULL" : invoice.output}</span>
+                  <span>
+                    {submission.output === "" ? "NULL" : submission.output}
+                  </span>
                 </p>
               </p>
               <p>
                 Status:{" "}
                 <span
                   className={`${
-                    invoice.status === "Accepted"
+                    submission.status === "Accepted"
                       ? "text-green-700"
                       : "text-red-700"
                   } text-2xl`}
                 >
-                  {invoice.status}
+                  {submission.status}
                 </span>
               </p>
             </div>
@@ -144,8 +145,8 @@ const CodePage = ({
               className="mt-40 border-t-neutral-950"
               height="60vh"
               options={{ readOnly: true }}
-              language={invoice.code_language}
-              defaultValue={invoice.code}
+              language={submission.code_language}
+              defaultValue={submission.code}
             />
 
             <div className="flex items-center justify-around ">
@@ -153,7 +154,7 @@ const CodePage = ({
                 <Link href="/">Home</Link>
               </Button>
               <Button>
-                <Link href="/">Submissions</Link>
+                <Link href="/submissions">Submissions</Link>
               </Button>
             </div>
           </div>
