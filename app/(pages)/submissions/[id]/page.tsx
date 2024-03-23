@@ -37,7 +37,7 @@ function formatTimestamp(timestamp: string): string {
   return dateObj.toLocaleString("en-US", options);
 }
 
-const page = ({
+const CodePage = ({
   params,
 }: {
   params: {
@@ -162,4 +162,4 @@ const page = ({
   );
 };
 
-export default page;
+export default CodePage;
